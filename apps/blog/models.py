@@ -32,3 +32,17 @@ class Post(BaseModel):
     class Meta:
         verbose_name = "Post"
         verbose_name_plural = "Posts"
+
+
+class Interview(BaseModel):
+    title = models.CharField(max_length=255, blank=True, null=True)
+    video_duration = models.TimeField()
+    creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to="photos/interviews%Y/%m/%d/")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Interview"
+        verbose_name_plural = "Interviews"
