@@ -5,6 +5,7 @@ from ckeditor.fields import RichTextField
 from phonenumber_field.modelfields import PhoneNumberField
 from apps.dashboard.models import *
 from apps.choices import *
+from apps.common.models import Author
 
 
 class Category(BaseModel):
@@ -30,14 +31,11 @@ class SocialMedia(BaseModel):
         return self.name
 
 
-
-
-
 class Course(BaseModel):
     title = models.CharField(max_length=255, blank=True, null=True)
     badge_id = models.CharField(max_length=20, choices=BADGE_TYPE_CHOICES, blank=True,
                                 null=True)  # static choice 1 for bestseller, 2 for tavsiya etiladi, 3 hech narsa
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
     category_id = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     original_price = models.DecimalField(verbose_name=_('Price'), decimal_places=2, max_digits=10, default=0)
     discounted_price = models.DecimalField(verbose_name=_('Discount'), decimal_places=2, max_digits=10, default=0,

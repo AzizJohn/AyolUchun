@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
-from apps.common.models import BaseModel
+from apps.common.models import BaseModel, Author
 from apps.course.models import *
 from apps.payment.models import *
 from apps.dashboard.models import *
@@ -22,7 +22,7 @@ class PostCategory(BaseModel):
 class Post(BaseModel):
     poster = models.ImageField(upload_to="photos/post_image%Y/%m/%d/", verbose_name=_('photo'), blank=True, null=True)
     title = models.CharField(max_length=255, verbose_name='Title', blank=True, null=True)
-    author_id = models.ForeignKey(User, verbose_name=_('Author'), on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, verbose_name=_('Author'), on_delete=models.CASCADE)
     view_count = models.IntegerField()
     full_text = RichTextField(verbose_name=_('Post Content'), blank=True, null=True)
 
@@ -37,7 +37,7 @@ class Post(BaseModel):
 class Interview(BaseModel):
     title = models.CharField(max_length=255, blank=True, null=True)
     video_duration = models.TimeField()
-    creator_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to="photos/interviews%Y/%m/%d/")
 
     def __str__(self):
