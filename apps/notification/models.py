@@ -8,7 +8,7 @@ from apps.dashboard.models import *
 
 
 class Advertisement(BaseModel):
-    full_text = RichTextField(verbose_name=_('Text'), blan=True, null=True)
+    full_text = RichTextField(verbose_name=_('Text'), blank=True, null=True)
     phone = PhoneNumberField(verbose_name=_('Phone number'), blank=True, null=True)
 
     def __str__(self):

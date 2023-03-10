@@ -7,3 +7,4 @@ pre-commit==3.1.1
 
 pandas~=1.5.3
 Pillow~=9.4.0
+django-modeltranslation~=0.18.9
