@@ -1,0 +1,188 @@
+database modelling
+
+
+Apps:
+    1: Courses
+    2: Payment
+    3: Blog
+    4: Dashboard
+    5: Others and notifications in one
+
+
+Courses    APP
+----------
+
+Categories
+    id
+    name
+    icon
+    creat_at
+    updated_at
+
+social_medias
+    id
+    name
+    icon
+    link
+    redirects   # integerfield feature
+    order  # interfield  1, 2, 3, 4
+
+Interviews
+    id
+    title
+    video_duration
+    creator_id   # cat ni usersga boglaymiz
+    poster
+    created_at
+    uat
+
+Users
+    id
+    first_name
+    last_name
+    avatar
+    username   # makhliyo007
+    password
+    role_id  # 1 : oddiy user  2: admin ,,,
+    profession   #   tilshunos lavozimi
+    country
+    region
+    address
+    postal_index    # zip code
+    phone
+    instagram_account
+    imkon_aaccount
+    linkedin_account
+    work_place
+    bio
+    birth_date    # age ni shu ma'lumot bilan hisoblab olamiz
+    email
+    email_confirmation_link # charfield
+    email_confirmation_status # integer static 1: confirmed 2: unconfirmed 3: confirmation iloji yo'q
+    gender   # static choice man female
+
+
+
+
+courses
+    id
+    title
+    badge_id     # bestseller: 1  tavsiya etilgan:2 choice ishlatamiz 3: hch narsa
+    creator_id  # userni ulaymiz
+    poster_video_path
+    category_id
+    original_price
+    discounted_price
+    discount_expire_date     # optional
+    description
+
+
+user_course_connections
+    course_id
+    user_id
+    payment  # sotib olingan , sotib olinmagan  jarayonda
+
+course_comments
+    id
+    user_id    # foreign key to Users table
+    course_id
+    ranking
+    date_created
+    text
+    status # integerfield 1: active=yoqqani  2: pending= kelib tushgani 3: deleted=yoqmagani otkaz
+
+
+lectures
+    id
+    title
+    payment_state  # static 1: sotib olmasdann ham ko'rish mumkin 2: sotib olish majburiy
+    order  # integer field 1.2.3.4.5.6 lar
+    description   # darslik haqida
+
+lecture_comment
+    id
+    user_id    # foreign key to Users table
+    course_id
+    ranking
+    date_created
+    text
+    status # integerfield 1: active=yoqqani  2: pending= kelib tushgani 3: deleted=yoqmagani otkaz
+    reply_lecture_comment_id  # foreignkey qilib lecture_comment_id o'ziga o'zini bog'laymiz
+
+
+videos
+    id
+    title
+    duration_video
+    order  # integerfield 1. 2.3.4
+    lecture_id
+    required_video_id  # foreignkey qiliamiz videos ni o'zini o'ziga bog'laymiz
+
+
+user_video_viewed_relation
+    video_id
+    user_id
+
+
+certificates
+    id
+    user_id
+    course_id
+    certificate_photo_path
+
+
+-----------------Payment APP----------------
+
+
+Payments
+    id
+    course_id
+    payer_user_id  # fk User table
+    price
+    payment_type_id  # static 1 : visa 2: click
+    created_at # to'lov knopkasi bosilgandagi vaqt
+    payed_at # to'langan sana vaqti
+    payment_status # static 1: to'lanmagan 2: to'langan 3: o'chirilgan inactive
+
+
+
+---- Blog ---------
+
+Post_categories
+    id
+    name
+
+
+Posts
+    id
+    poster
+    title
+    author_id # FK Users
+    view_count
+    created_at
+    full_text
+
+
+
+-------->> Others App <<--------
+
+advertisements
+    id
+    full_text
+    phone   # murojat uchun tel
+
+feedbacks
+    id
+    name
+    email
+    phone
+    message
+
+notifications
+    id
+    title
+    content
+    created_at
+    is_vievew  # static: True or False
+    user_id   # qaysi user ga yuborilganligi
+    scheduled_time   #  Datetimefield  agar biz in advance notification taxlab qo'yib scheduled yubormoqchi bo'lsa
