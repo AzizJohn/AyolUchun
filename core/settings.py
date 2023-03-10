@@ -43,7 +43,7 @@ LOCAL_APPS = [
     'apps.course',
     'apps.dashboard',
     'apps.payment',
-    'apps.notification',
+    'apps.about',
 
 ]
 
@@ -52,6 +52,7 @@ EXTRA_MODULES = [
     'phonenumber_field',
     'rest_framework',
     'modeltranslation',
+    'sorl.thumbnail',
 
 ]
 
@@ -132,6 +133,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"

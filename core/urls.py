@@ -25,7 +25,7 @@ urlpatterns = [
                   # path('course/', include("apps.course.urls")),
                   # path('payment/', include("apps.payment.urls")),
                   # path('dashboard/'), include("apps.dashboard.urls"),
-                  # path('notification/'), include("apps.notification.urls"),
+                  # path('about/'), include("apps.about.urls"),
 
                   path("i18n/", include("django.conf.urls.i18n")),
 
