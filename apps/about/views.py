@@ -18,3 +18,10 @@ class NotificationListAPIView(ListAPIView):
 
     def get_queryset(self):
         return Notification.get_unread_notifications(self.request.user)
+
+
+class NotificationDetailAPIView(RetrieveAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+
+

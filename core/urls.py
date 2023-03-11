@@ -39,6 +39,7 @@ urlpatterns = [
                   # path('payment/', include("apps.payment.urls")),
                   # path('dashboard/'), include("apps.dashboard.urls"),
                   # path('about/'), include("apps.about.urls"),
+                  path('blog/', include('apps.blog.urls')),
                   path('ckeditor/', include('ckeditor_uploader.urls')),
                   path('api/v1/', include('apps.course.urls')),
                   path("i18n/", include("django.conf.urls.i18n")),

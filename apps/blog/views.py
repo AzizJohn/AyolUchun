@@ -6,7 +6,7 @@ from apps.blog.serializers import (
     PostCategorySerializer, PostListSerializer, PostSerializer,
     InterviewListSerializer, InterviewSerializer,
 )
-from apps.common.tasks import update_view_count_task
+from apps.blog.tasks import update_post_view_task
 
 
 # Create your views here.
@@ -14,7 +14,7 @@ from apps.common.tasks import update_view_count_task
 # ===========================  POST VIEWS  ====================================
 ###############################################################################
 class PostCategoryListAPIView(ListAPIView):
-    queryset = PostCategory.objects.all().oreder_by('name')
+    queryset = PostCategory.objects.all().order_by('name')
     serializer_class = PostCategorySerializer
 
 
@@ -24,7 +24,7 @@ class PostCategoryDetailAPIView(RetrieveAPIView):
 
 
 class PostListAPIView(ListAPIView):
-    queryset = Post.objects.all().oreder_by('-created_at')
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostListSerializer
 
 
@@ -36,8 +36,13 @@ class PostDetailAPIView(RetrieveAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
 
-        update_view_count_task.delay(
-            Post, instance, request.user, self.request.headers.get("device-id", None)
+        print(request.user)
+        print(request.user.id)
+        # update_view_count_task.delay(
+        #     Post, instance, request.user, self.request.headers.get("device-id", None)
+        # )
+        update_post_view_task.delay(
+            instance.id, request.user.id, self.request.headers.get("device-id", None)
         )
 
         return Response(serializer.data)

@@ -29,7 +29,7 @@ class Post(BaseModel):
         Author, verbose_name=_('Author'), on_delete=models.CASCADE,
         related_name='posts'
     )
-    view_count = models.IntegerField()
+    view_count = models.IntegerField(default=0)
     content = RichTextUploadingField(verbose_name=_('Post Content'))
 
     def __str__(self):
