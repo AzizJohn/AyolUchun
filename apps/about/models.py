@@ -1,8 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.utils import timezone
+
 from phonenumber_field.modelfields import PhoneNumberField
 from ckeditor.fields import RichTextField
 from sorl.thumbnail import ImageField
+
 from apps.common.models import BaseModel
 from apps.dashboard.models import User
 
@@ -24,19 +27,26 @@ class Feedback(BaseModel):
 class Notification(BaseModel):
     title = models.CharField(max_length=100, verbose_name=_('Title'), blank=True, null=True)
     context = RichTextField(verbose_name=_('Context'), blank=True, null=True)
-    scheduled_at = models.DateTimeField(verbose_name=_('schedule time'))
-
-    def __str__(self):
-        return self.title
+    scheduled_at = models.DateTimeField(verbose_name=_('schedule time'), default=timezone.now)
 
     class Meta:
         verbose_name = "Notification"
         verbose_name_plural = "Notifications"
 
+    def get_unread_notifications(self, user):
+        now = timezone.now()
+        queryset = self.objects.filter(
+            scheduled_at__lte=now,
+        ).execute(notification_views__user=user)
+
+    def __str__(self):
+        return self.title
+
 
 class NotificationView(BaseModel):
     notification = models.ForeignKey(
-        Notification, on_delete=models.CASCADE
+        Notification, on_delete=models.CASCADE,
+        related_name='notification_views'
     )
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True

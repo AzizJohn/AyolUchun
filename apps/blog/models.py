@@ -42,10 +42,10 @@ class Post(BaseModel):
 
 class PostView(BaseModel):
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='views'
+        Post, on_delete=models.CASCADE, related_name='post_views'
     )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users_viewed',
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='post_views',
         null=True, blank=True
     )
     device_id = models.CharField(max_length=256)
