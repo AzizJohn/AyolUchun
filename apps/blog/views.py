@@ -18,6 +18,11 @@ class PostCategoryListAPIView(ListAPIView):
     serializer_class = PostCategorySerializer
 
 
+class PostCategoryDetailAPIView(RetrieveAPIView):
+    queryset = PostCategory.objects.all()
+    serializer_class = PostCategorySerializer
+
+
 class PostListAPIView(ListAPIView):
     queryset = Post.objects.all().oreder_by('-created_at')
     serializer_class = PostListSerializer
