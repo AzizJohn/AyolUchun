@@ -39,12 +39,12 @@ INSTALLED_APPS = [
 ]
 
 LOCAL_APPS = [
+    'apps.about',
+    'apps.blog',
     'apps.common',
     'apps.course',
     'apps.dashboard',
     'apps.payment',
-    'apps.about',
-
 ]
 
 EXTRA_MODULES = [

@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from apps.blog.models import PostCategory, Post, Interview
+from apps.common.serializers import AuthorSerializer
 
 
 class PostCategorySerializer(serializers.ModelSerializer):
@@ -9,6 +11,22 @@ class PostCategorySerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True)
+
     class Meta:
         model = Post
-        fields = ('id', 'title', 'image', 'author', 'view_count', 'full_text')
+        fields = (
+            'id', 'title', 'image', 'author', 'view_count',
+            'content', 'created_at', 'modified_at',
+        )
+
+
+class InterviewSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True)
+
+    class Meta:
+        model = Interview
+        fields = (
+            'id', 'title', 'image', 'video', 'author', 'text',
+            'created_at', 'modified_at',
+        )

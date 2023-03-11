@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext as _
 
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -16,6 +17,7 @@ class PostCategory(BaseModel):
     class Meta:
         verbose_name = "Post Category"
         verbose_name_plural = "Post Categories"
+        ordering = ['name']
 
 
 class Post(BaseModel):
@@ -44,7 +46,7 @@ class PostView(BaseModel):
         Post, on_delete=models.CASCADE, related_name='views'
     )
     user = models.ForeignKey(
-        'auth.User', on_delete=models.CASCADE, related_name='users_viewed',
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users_viewed',
         null=True, blank=True
     )
     device_id = models.CharField(max_length=256)
