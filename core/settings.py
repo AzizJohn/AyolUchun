@@ -54,6 +54,7 @@ EXTRA_MODULES = [
     'rest_framework',
     'modeltranslation',
     'sorl.thumbnail',
+    'celery',
 
 ]
 
@@ -165,3 +166,7 @@ AUTH_USER_MODEL = 'dashboard.User'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
+# Celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_TIMEZONE = "Asia/Tashkent"

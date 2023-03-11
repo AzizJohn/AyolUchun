@@ -10,6 +10,16 @@ class PostCategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class PostListSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True)
+
+    class Meta:
+        model = Post
+        fields = (
+            'id', 'title', 'image', 'author', 'view_count', 'created_at',
+        )
+
+
 class PostSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
 
