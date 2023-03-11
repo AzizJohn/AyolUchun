@@ -1,16 +1,17 @@
+from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils.translation import gettext as _
-from apps.common.models import BaseModel
-from ckeditor.fields import RichTextField
-from phonenumber_field.modelfields import PhoneNumberField
-from apps.dashboard.models import *
+from sorl.thumbnail import ImageField
+
 from apps.choices import *
 from apps.common.models import Author
+from apps.common.models import BaseModel
+from apps.dashboard.models import User
 
 
 class Category(BaseModel):
     name = models.CharField(max_length=30, blank=True, null=True)
-    icon = models.ImageField(upload_to="photos/category_icon%Y/%m/%d/")
+    icon = ImageField(upload_to="photos/category_icon/%Y/%m/%d/")
 
     def __str__(self):
         return self.name
@@ -22,7 +23,7 @@ class Category(BaseModel):
 
 class SocialMedia(BaseModel):
     name = models.CharField(max_length=30, blank=True, null=True)
-    icon = models.ImageField(upload_to="photos/socialmedia_icon%Y/%m/%d/")
+    icon = ImageField(upload_to="photos/socialmedia_icon/%Y/%m/%d/")
     link = models.URLField()
     redirects = models.IntegerField()
     order = models.IntegerField()  # 1,2,3,4 for ordering social_medias
@@ -73,12 +74,19 @@ class Section(BaseModel):
     title = models.CharField(max_length=100)
     index = models.IntegerField()
 
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Section"
+        verbose_name_plural = "Sections"
+
 
 class Lecture(BaseModel):
     title = models.CharField(max_length=255, verbose_name=_('title'), blank=True, null=True)
     is_paid = models.BooleanField()
     order = models.IntegerField()  # for ordering lectures 1, 2, 3, 4, 5
-    video = models.FileField(upload_to="videos/lecture_video%Y%m%d/")
+    video = models.FileField(upload_to="videos/lecture_video/%Y/%m/%d/")
     description = RichTextField(verbose_name=_('Description'))
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
@@ -117,7 +125,7 @@ class LectureComment(BaseModel):
 class Certificate(BaseModel):
     user_id = models.ForeignKey(User, verbose_name=_('User'), on_delete=models.CASCADE)
     course_id = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE)
-    certificate_photo = models.ImageField(upload_to="photos/certificate%Y/%m/%d/")
+    certificate_photo = ImageField(upload_to="photos/certificate/%Y/%m/%d/")
 
     def __str__(self):
         return self.user_id.first_name

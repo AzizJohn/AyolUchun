@@ -36,9 +36,9 @@ class Post(BaseModel):
 
 class Interview(BaseModel):
     title = models.CharField(max_length=255, blank=True, null=True)
-    video_duration = models.TimeField()
+    video = models.FileField(upload_to="videos/interview_video/%Y/%m/%d/")
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to="photos/interviews%Y/%m/%d/")
+    photo = models.ImageField(upload_to="photos/interviews/%Y/%m/%d/")
 
     def __str__(self):
         return self.title

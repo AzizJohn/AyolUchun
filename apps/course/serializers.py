@@ -1,26 +1,28 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+
+from apps.common.models import Author
 from .models import *
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class AuthorSerializer(ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ('Profile_pic', 'gender', 'first_name', 'last_name', 'email', 'bio')
+
+
+class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = ('name', 'icon')
 
 
-class SocialMediaSerializer(serializers.ModelSerializer):
+class SocialMediaSerializer(ModelSerializer):
     class Meta:
         model = SocialMedia
         fields = ('name', 'icon', 'link', 'redirects', 'order')
 
 
-class InterviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Interview
-        fields = ('title', 'video_duration', 'creator_id', 'photo')
-
-
-class CourseSerializer(serializers.ModelSerializer):
+class CourseSerializer(ModelSerializer):
     class Meta:
         model = Course
         fields = (
@@ -28,44 +30,36 @@ class CourseSerializer(serializers.ModelSerializer):
             'description')
 
 
-class UserCourseConnectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserCourseConnection
-        fields = ('course_id', 'user_id', 'payment_state')
-
-
-class CourseCommentSerializer(serializers.ModelSerializer):
+class CourseCommentSerializer(ModelSerializer):
     class Meta:
         model = CourseComment
         fields = ('user_id', 'course_id', 'ranking', 'comment_text', 'status')
 
 
-class LectureSerializer(serializers.ModelSerializer):
+class SectionSerializer(ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ('course_id', 'title', 'index')
+
+
+class LectureSerializer(ModelSerializer):
     class Meta:
         model = Lecture
-        fields = ('title', 'payment_state', 'order', 'description')
+        fields = ('title', 'is_paid', 'order', 'video', 'section', 'description')
 
 
-class LectureCommentSerializer(serializers.ModelSerializer):
+class LectureViewed(ModelSerializer):
+    class Meta:
+        fields = ('lecture', 'user')
+
+
+class LectureCommentSerializer(ModelSerializer):
     class Meta:
         model = LectureComment
-        fields = ('user_id', 'course_id', 'ranking', 'comment_text', 'status', 'reply_lecture_comment_id')
+        fields = ('user_id', 'lecture', 'comment_text', 'status', 'reply_lecture_comment_id', 'index')
 
 
-class VideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Video
-        fields = ('title', 'duration_time', 'order', 'lecture_id', 'required_video_id')
-
-
-class UserVideoViewedRelationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserVideoViewedRelation
-        fields = ('video_id', 'user_id')
-
-
-class CertificateSerializer(serializers.ModelSerializer):
+class CertificateSerializer(ModelSerializer):
     class Meta:
         model = Certificate
         fields = ('user_id', 'course_id', 'certificate_photo')
-       
