@@ -27,7 +27,7 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = (
             'id', 'title', 'image', 'author', 'view_count',
-            'content', 'created_at', 'modified_at',
+            'content', 'created_at', 'updated_at',
         )
 
 
@@ -48,5 +48,5 @@ class InterviewSerializer(serializers.ModelSerializer):
         model = Interview
         fields = (
             'id', 'title', 'image', 'video', 'author', 'text',
-            'created_at', 'modified_at',
+            'created_at', 'updated_at',
         )

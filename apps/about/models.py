@@ -33,11 +33,14 @@ class Notification(BaseModel):
         verbose_name = "Notification"
         verbose_name_plural = "Notifications"
 
-    def get_unread_notifications(self, user):
+    @classmethod
+    def get_unread_notifications(cls, user):
         now = timezone.now()
-        queryset = self.objects.filter(
-            scheduled_at__lte=now,
+        queryset = cls.objects.filter(
+            scheduled_at__lte=now, created_at__gte=user.created_at
         ).execute(notification_views__user=user)
+
+        return queryset
 
     def __str__(self):
         return self.title
@@ -61,7 +64,7 @@ class Advertisement(BaseModel):
     title = models.CharField(max_length=150, null=True, blank=True)
     image = ImageField(upload_to="photos/advertisement/%Y/%m/%d/")
     content = RichTextField(verbose_name=_('Content'))
-    phone = PhoneNumberField(verbose_name=_('Phone number'))
+    phone_number = PhoneNumberField(verbose_name=_('Phone number'))
 
     def __str__(self):
         return "Advertisement"
@@ -85,7 +88,7 @@ class UseTerm(BaseModel):
 
 
 class Contact(BaseModel):
-    phone = PhoneNumberField(verbose_name=_('Phone number'))
+    phone_number = PhoneNumberField(verbose_name=_('Phone number'))
     email = models.EmailField()
     address = models.CharField(max_length=150)
     long = models.FloatField()
