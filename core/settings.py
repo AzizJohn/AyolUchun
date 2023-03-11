@@ -55,6 +55,7 @@ EXTRA_MODULES = [
     'modeltranslation',
     'sorl.thumbnail',
     'celery',
+    'drf_yasg',
 
 ]
 
@@ -170,3 +171,14 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_TIMEZONE = "Asia/Tashkent"
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+
+}
