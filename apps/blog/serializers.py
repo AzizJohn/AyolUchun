@@ -31,6 +31,16 @@ class PostSerializer(serializers.ModelSerializer):
         )
 
 
+class InterviewListSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True)
+
+    class Meta:
+        model = Interview
+        fields = (
+            'id', 'title', 'image', 'author', 'created_at',
+        )
+
+
 class InterviewSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
 
