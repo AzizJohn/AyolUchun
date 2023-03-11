@@ -49,6 +49,7 @@ LOCAL_APPS = [
 
 EXTRA_MODULES = [
     'ckeditor',
+    'ckeditor_uploader',
     'phonenumber_field',
     'rest_framework',
     'modeltranslation',
@@ -161,3 +162,6 @@ LANGUAGES = (
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
 AUTH_USER_MODEL = 'dashboard.User'
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+

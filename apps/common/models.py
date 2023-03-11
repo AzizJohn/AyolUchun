@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
-from apps.choices import *
-from ckeditor.fields import RichTextField
+from apps.choices import GENDER_TYPE_CHOICES
 
 
 class BaseModel(models.Model):
@@ -13,7 +12,7 @@ class BaseModel(models.Model):
 
 
 class Author(BaseModel):
-    profile_pic = models.ImageField(upload_to="photos/avatar%Y%m%d/", blank=True)
+    profile_pic = models.ImageField(upload_to="photos/avatar/%Y/%m/%d/", blank=True)
     gender = models.CharField(max_length=10, choices=GENDER_TYPE_CHOICES)
     first_name = models.CharField(max_length=50, verbose_name=_("Name"))
     last_name = models.CharField(max_length=50)
