@@ -36,14 +36,15 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                  # path('admin/', admin.site.urls),
-                  # path('course/', include("apps.course.urls")),
-                  # path('payment/', include("apps.payment.urls")),
-                  # path('dashboard/'), include("apps.dashboard.urls"),
-                  # path('about/'), include("apps.about.urls"),
+                # path('admin/', admin.site.urls),
+                # path('course/', include("apps.course.urls")),
+                # path('payment/', include("apps.payment.urls")),
+                # path('dashboard/'), include("apps.dashboard.urls"),
+                # path('about/'), include("apps.about.urls"),
+                path('ckeditor/', include('ckeditor_uploader.urls')),
 
-                  path("i18n/", include("django.conf.urls.i18n")),
+                path("i18n/", include("django.conf.urls.i18n")),
 
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += i18n_patterns(path("admin/", admin.site.urls))

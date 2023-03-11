@@ -8,10 +8,10 @@ from apps.dashboard.models import User
 
 
 class Feedback(BaseModel):
-    name = models.CharField(max_length=50, verbose_name=_('Name'), blank=True, null=True)
+    name = models.CharField(max_length=50, verbose_name=_('Name'))
     email = models.EmailField(unique=True, verbose_name=_('Email'), blank=True, null=True)
     phone_number = PhoneNumberField(verbose_name=_('Phone number'), blank=True, null=True)
-    message = RichTextField(verbose_name=_('Feedback message'), blank=True, null=True)
+    message = RichTextField(verbose_name=_('Feedback message'))
 
     def __str__(self):
         return self.name
@@ -49,8 +49,8 @@ class NotificationView(BaseModel):
 
 class Advertisement(BaseModel):
     title = models.CharField(max_length=150, null=True, blank=True)
-    # image =
-    content = RichTextField(verbose_name=_('Text'))
+    image = ImageField(upload_to="photos/advertisement/%Y/%m/%d/")
+    content = RichTextField(verbose_name=_('Content'))
     phone = PhoneNumberField(verbose_name=_('Phone number'))
 
     def __str__(self):
@@ -64,7 +64,7 @@ class Advertisement(BaseModel):
 class UseTerm(BaseModel):
     title = models.CharField(max_length=150, null=True, blank=True)
     image = ImageField(upload_to="photos/notification_images/%Y/%m/%d/")
-    content = RichTextField(verbose_name=_('Text'))
+    content = RichTextField(verbose_name=_('Content'))
 
     def __str__(self):
         return "UseTerm"

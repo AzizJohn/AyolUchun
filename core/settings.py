@@ -39,20 +39,22 @@ INSTALLED_APPS = [
 ]
 
 LOCAL_APPS = [
+    'apps.about',
+    'apps.blog',
     'apps.common',
     'apps.course',
     'apps.dashboard',
     'apps.payment',
-    'apps.about',
-
 ]
 
 EXTRA_MODULES = [
     'ckeditor',
+    'ckeditor_uploader',
     'phonenumber_field',
     'rest_framework',
     'modeltranslation',
     'sorl.thumbnail',
+    'celery',
 
 ]
 
@@ -161,3 +163,10 @@ LANGUAGES = (
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
 AUTH_USER_MODEL = 'dashboard.User'
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+# Celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_TIMEZONE = "Asia/Tashkent"
