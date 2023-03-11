@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.blog.views import (
+from apps.blog.api.views import (
     PostCategoryListAPIView,
     PostCategoryDetailAPIView,
     PostListAPIView,

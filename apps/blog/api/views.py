@@ -2,11 +2,11 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 
 from apps.blog.models import PostCategory, Post, Interview
-from apps.blog.serializers import (
+from apps.blog.api.serializers import (
     PostCategorySerializer, PostListSerializer, PostSerializer,
     InterviewListSerializer, InterviewSerializer,
 )
-from apps.blog.tasks import update_post_view_task
+from apps.blog.services.tasks import update_post_view_task
 
 
 # Create your views here.

@@ -1,5 +1,5 @@
 from celery import shared_task
-from apps.blog.utils import update_post_view
+from apps.blog.services.utils import update_post_view
 
 
 @shared_task(name='update_post_view')
