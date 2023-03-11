@@ -52,12 +52,11 @@ class NotificationView(BaseModel):
         related_name='notification_views'
     )
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True
+        User, on_delete=models.CASCADE
     )
-    device_id = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.notification.title[:20]}... | {self.user} | {self.device_id}"
+        return f"{self.notification.title[:20]}... | {self.user}"
 
 
 class Advertisement(BaseModel):
@@ -66,12 +65,12 @@ class Advertisement(BaseModel):
     content = RichTextField(verbose_name=_('Content'))
     phone_number = PhoneNumberField(verbose_name=_('Phone number'))
 
-    def __str__(self):
-        return "Advertisement"
-
     class Meta:
         verbose_name = "Advertisement"
         verbose_name_plural = "Advertisements"
+
+    def __str__(self):
+        return "Advertisement"
 
 
 class UseTerm(BaseModel):
@@ -79,12 +78,12 @@ class UseTerm(BaseModel):
     image = ImageField(upload_to="photos/notification_images/%Y/%m/%d/")
     content = RichTextField(verbose_name=_('Content'))
 
-    def __str__(self):
-        return "UseTerm"
-
     class Meta:
         verbose_name = "Advertisement"
         verbose_name_plural = "Advertisements"
+
+    def __str__(self):
+        return "UseTerm"
 
 
 class Contact(BaseModel):
@@ -94,9 +93,9 @@ class Contact(BaseModel):
     long = models.FloatField()
     lat = models.FloatField()
 
-    def __str__(self):
-        return "UseTerm"
-
     class Meta:
         verbose_name = "Advertisement"
         verbose_name_plural = "Advertisements"
+
+    def __str__(self):
+        return "UseTerm"
