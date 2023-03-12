@@ -3,11 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from apps.about.models import Feedback, Notification, Advertisement, UseTerm, Contact
-from apps.about.serializers import (
+from apps.about.api.serializers import (
     FeedbackSerializer, NotificationSerializer, AdvertisementSerializer, UseTermSerializer, ContactSerializer,
 )
-from apps.about.services.utils import get_last_object
-from apps.about.services.tasks import update_notification_view_task
+from apps.about.services.utils import get_last_object, update_notification_view
 
 
 # Create your views here.
@@ -32,10 +31,8 @@ class NotificationDetailAPIView(RetrieveAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
 
-        # celery task to store information about that user viewed given notification
-        update_notification_view_task.delay(
-            instance.id, request.user.id
-        )
+        # a function to store information about that user viewed given notification
+        update_notification_view(instance.id, request.user.id)
 
         return Response(serializer.data)
 
@@ -57,8 +54,8 @@ class UseTermDetailAPIView(RetrieveAPIView):
     def get_object(self):
         ad = get_last_object(UseTerm)
         if ad is None:
+            # if nothing found
             return Response(status=status.HTTP_404_NOT_FOUND)
-
         return ad
 
 
@@ -68,6 +65,6 @@ class ContactDetailAPIView(RetrieveAPIView):
     def get_object(self):
         ad = get_last_object(Contact)
         if ad is None:
+            # if nothing found
             return Response(status=status.HTTP_404_NOT_FOUND)
-
         return ad

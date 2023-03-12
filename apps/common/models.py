@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
-from apps.choices import GENDER_TYPE_CHOICES
+from apps.common.choices import GENDER_TYPE_CHOICES
 
 
 class BaseModel(models.Model):

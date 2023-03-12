@@ -1,6 +1,6 @@
 # PAYMENT TYPE CHOICES:
 PAYME = "uzcard"
-APELSIN = "humo"
+APELSIN = "apelsin"
 VISA = "visa"
 CLICK = 'click'
 MASTERCARD = 'mastercard'
@@ -41,10 +41,10 @@ PURCHASED = "purchased"
 NOT_PURCHASED = "not puchased"
 IN_PROGRESS = "in progres"
 
-PAYMENT_STATUS_TYPE_CHOICES = (
-    (PURCHASED, "purchased"),
+PAYMENT_STATUS_CHOICES = (
     (NOT_PURCHASED, "not puchased"),
     (IN_PROGRESS, "in progres"),
+    (PURCHASED, "purchased"),
 )
 
 # COURSE COMMENT STATUS TYPE CHOICES

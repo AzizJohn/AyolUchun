@@ -171,7 +171,7 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_TIMEZONE = "Asia/Tashkent"
-CELERY_IMPORTS = ('apps.about.services.tasks', 'apps.blog.services.tasks',)
+CELERY_IMPORTS = ('apps.blog.services.tasks', )
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
