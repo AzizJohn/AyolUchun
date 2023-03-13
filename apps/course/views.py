@@ -46,8 +46,6 @@ class CourseDetailAPIView(RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-    def isUserEnrolled(self, request, course_id, user_id):
-        return CourseUser.objects.all().filter(course_id=request.data['course_id'], payer=request.data['user_id'])
 
     def isUserPurchased(self, request):
         return CourseUser.objects.all().filter(payment_status=PAYMENT_STATUS_CHOICES[0][0]).filter(
