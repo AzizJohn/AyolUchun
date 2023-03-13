@@ -1,7 +1,9 @@
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
 from apps.common.serializers import AuthorSerializer
 from .models import *
+from ..payment.models import Payment
 
 
 class UserSerializer(ModelSerializer):
@@ -25,13 +27,31 @@ class SocialMediaSerializer(ModelSerializer):
 class CourseSerializer(ModelSerializer):
     author = AuthorSerializer(read_only=True)
     category_id = CategorySerializer(read_only=True)
+    # purchased_users=SerializerMethodField()
+    # four_enrolled_users=SerializerMethodField()
+    is_purchased=SerializerMethodField()
+
+    def get_is_purchased(self, course):
+        return CourseUser.objects.filter(
+            course=course.id, user=self.context['request'].user.id).exists()
+
+    # def get_purchased_users(self, course):
+    #     users = course.enrolled_users
+    #
+
+        # return course.enrolled_users.filter(payment_status=PAYMENT_STATUS_CHOICES[0][0]).filter(
+        #     course_id='course_id', payer='user_id')
+
+    # def getFourEnrolledUsers(self, request):
+    #     return CourseUser.objects.all().filter(payment_status=PAYMENT_STATUS_CHOICES[0][0]).filter(
+    #         course_id=request.data['course_id'])[:4]
 
     class Meta:
         model = Course
         fields = (
             'id', 'title', 'badge_id', 'author', 'category_id', 'original_price', 'discounted_price',
-            'discount_expire_date',
-            'description')
+            'discount_expire_date',  # 'purchased_users', 'four_enrolled_users',
+            'description', 'is_purchased')
 
 
 class CourseCommentSerializer(ModelSerializer):

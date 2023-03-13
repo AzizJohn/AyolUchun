@@ -183,3 +183,7 @@ SWAGGER_SETTINGS = {
     },
 
 }
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
+}
