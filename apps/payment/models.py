@@ -11,7 +11,7 @@ class Payment(BaseModel):
     course = models.ForeignKey(
         Course, verbose_name=_('Course'), on_delete=models.CASCADE, related_name='course_payments'
     )
-    prayer = models.ForeignKey(
+    payer = models.ForeignKey(
         User, verbose_name=_('Payer'), on_delete=models.CASCADE, related_name='user_payments'
     )
     price = models.DecimalField(verbose_name=_('Price'), max_digits=10, decimal_places=2)

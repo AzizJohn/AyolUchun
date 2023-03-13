@@ -62,6 +62,11 @@ class Course(BaseModel):
         verbose_name_plural = "Courses"
 
 
+class CourseUser(BaseModel):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolled_users')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrolled_courses')
+
+
 class CourseComment(BaseModel):
     user_id = models.ForeignKey(User, verbose_name=_('User'), on_delete=models.CASCADE)
     course_id = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE)
