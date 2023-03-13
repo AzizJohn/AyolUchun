@@ -80,7 +80,7 @@ courses
 user_course_connections
     course_id
     user_id
-    payment  # sotib olingan , sotib olinmagan  jarayonda
+    payment  # 1 sotib olingan , 2 sotib olinmagan 3 jarayonda
 
 course_comments
     id

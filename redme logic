@@ -1,0 +1,75 @@
+Course app logic
+
+course
+
+get averagerating
+
+select avg rating from course
+where courseid = course_id
+
+
+isUserAssigned
+
+select count(*) from payment
+where courseid = course_id and userid = user_id
+
+isUserPurchased
+
+select payment_status from payment
+where courseid = course_id and userid = user_id
+
+getFourEnrolledUsers
+
+select * from payment
+left join user on payment.userid = user.id
+where courseid = course_id limit 4
+
+getEnrolledUsersCount
+
+select count(*) from payment
+where courseid = course_id
+
+Lecture logic inside Course app
+
+getSectionStatus
+if(Lecture.is_paid == 1)
+    if(Course.isUserPurchased)
+        select count(*) from lecture
+        left join lecture_viewed on lecture.id = lecture_viewed.lectureid
+        where sectionid = section_id
+
+        if(result==0)
+            return 'Ko'rilmagan'
+        elif result<lecture_number:
+            return 'jarayonda'
+        else:
+            return 'ko'rilgan'
+    else:
+        return 'Sotib olinmagan'
+else
+    select count(*) from lecture
+    left join lecture_viewed on lecture.id = lecture_viewed.lectureid
+    where sectionid = section_id
+
+    if(result==0)
+        return 'Ko'rilmagan'
+    elif result<lecture_number:
+        return 'jarayonda'
+    else:
+        return 'ko'rilgan'
+
+shu querydan olingan natijani ko'rilgan ko'rilmagan jarayonda deb solishtiramiz
+if dan qaytgan natijani solishtiraman
+
+setLectureViewed
+    insert into lecture_viewed(lectureid, userid)
+
+
+getGeneratedCertificate
+    select * from certificate
+    where courseid = course_id and userid = user_id
+
+    if(result==0)
+        return 'Sertifikat yo'q'
+    else
+        return certificate

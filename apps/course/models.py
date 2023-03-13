@@ -48,6 +48,15 @@ class Course(BaseModel):
     def __str__(self):
         return self.title
 
+    def isThisCourseBoughtByUser(self, user_id):
+        return self.coursebuy_set.filter(user_id=user_id, payment=1).exists()
+
+    def getAllAssignedUsers(self):
+        return self.coursebuy_set.filter(payment=1).values_list('user_id', flat=True)
+
+    def getComments(self):
+        return self.coursecomment_set.all()
+
     class Meta:
         verbose_name = "Course"
         verbose_name_plural = "Courses"
@@ -109,9 +118,9 @@ class LectureComment(BaseModel):
 
     comment_text = models.TextField(verbose_name=_('Comment'))
     status = models.IntegerField()  # 1: active yoqqani, 2: pending= kelib tushgani  3: deleted=yoqmagani
-    reply_lecture_comment_id = models.ForeignKey('self', verbose_name=_('Reply to Comment'), null=True, blank=True,
-                                                 on_delete=models.CASCADE,
-                                                 related_name='replies')
+    parent_comment = models.ForeignKey('self', verbose_name=_('Reply to Comment'), null=True, blank=True,
+                                       on_delete=models.CASCADE,
+                                       related_name='replies')
     index = models.IntegerField()
 
     def __str__(self):
