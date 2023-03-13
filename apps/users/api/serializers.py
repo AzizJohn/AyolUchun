@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.dashboard.models import User
+from apps.users.models import User
 from apps.common.choices import PURCHASED
 
 

@@ -6,7 +6,7 @@ from sorl.thumbnail import ImageField
 from apps.common.choices import *
 from apps.common.models import Author
 from apps.common.models import BaseModel
-from apps.dashboard.models import User
+from apps.users.models import User
 
 
 class Category(BaseModel):

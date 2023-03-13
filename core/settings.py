@@ -43,7 +43,7 @@ LOCAL_APPS = [
     'apps.blog',
     'apps.common',
     'apps.course',
-    'apps.dashboard',
+    'apps.users',
     'apps.payment',
 ]
 
@@ -163,7 +163,7 @@ LANGUAGES = (
 
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
-AUTH_USER_MODEL = 'dashboard.User'
+AUTH_USER_MODEL = 'users.User'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 

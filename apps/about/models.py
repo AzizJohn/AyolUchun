@@ -7,7 +7,7 @@ from ckeditor.fields import RichTextField
 from sorl.thumbnail import ImageField
 
 from apps.common.models import BaseModel
-from apps.dashboard.models import User
+from apps.users.models import User
 
 
 class Feedback(BaseModel):

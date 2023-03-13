@@ -38,7 +38,7 @@ urlpatterns = [
 
     path('course/', include("apps.course.urls")),
     # path('payment/', include("apps.payment.api.urls")),
-    path('dashboard/', include("apps.dashboard.api.urls")),
+    path('users/', include("apps.users.api.urls")),
     path('about/', include("apps.about.api.urls")),
     path('blog/', include('apps.blog.api.urls')),
 

@@ -1,5 +1,5 @@
 from apps.blog.models import Post, PostView
-from apps.dashboard.models import User
+from apps.users.models import User
 
 
 def update_post_view(post_id, user_id, device_id):

@@ -36,11 +36,6 @@ class PostDetailAPIView(RetrieveAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
 
-        print(request.user)
-        print(request.user.id)
-        # update_view_count_task.delay(
-        #     Post, instance, request.user, self.request.headers.get("device-id", None)
-        # )
         update_post_view_task.delay(
             instance.id, request.user.id, self.request.headers.get("device-id", None)
         )

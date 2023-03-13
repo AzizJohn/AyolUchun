@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from apps.course.models import Course
-from apps.dashboard.models import User
+from apps.users.models import User
 from apps.common.models import BaseModel
 from apps.common.choices import PAYMENT_TYPE_CHOICES, PAYMENT_STATUS_CHOICES
 
