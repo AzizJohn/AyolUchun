@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from sorl.thumbnail import ImageField
 
-from apps.choices import *
+from apps.common.choices import *
 from apps.common.models import Author
 from apps.common.models import BaseModel
 from apps.dashboard.models import User
@@ -113,8 +113,12 @@ class LectureViewed(BaseModel):
 
 
 class LectureComment(BaseModel):
-    user_id = models.ForeignKey(User, verbose_name=_('User'), on_delete=models.CASCADE)
-    lecture = models.ForeignKey(Lecture, verbose_name=_('Lecture'), on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='lecture_comments'
+    )
+    lecture = models.ForeignKey(
+        Lecture, verbose_name=_('Lecture'), on_delete=models.CASCADE
+    )
 
     comment_text = models.TextField(verbose_name=_('Comment'))
     status = models.IntegerField()  # 1: active yoqqani, 2: pending= kelib tushgani  3: deleted=yoqmagani
@@ -124,7 +128,7 @@ class LectureComment(BaseModel):
     index = models.IntegerField()
 
     def __str__(self):
-        return self.user_id.first_name
+        return self.user.first_name
 
     class Meta:
         verbose_name = "Lecture Comment"
@@ -132,8 +136,10 @@ class LectureComment(BaseModel):
 
 
 class Certificate(BaseModel):
-    user_id = models.ForeignKey(User, verbose_name=_('User'), on_delete=models.CASCADE)
-    course_id = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='certificates'
+    )
+    course = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE)
     certificate_photo = ImageField(upload_to="photos/certificate/%Y/%m/%d/")
 
     def __str__(self):

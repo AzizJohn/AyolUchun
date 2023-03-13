@@ -32,6 +32,7 @@ class Notification(BaseModel):
     class Meta:
         verbose_name = "Notification"
         verbose_name_plural = "Notifications"
+        ordering = ['-created_at']
 
     @classmethod
     def get_unread_notifications(cls, user):
