@@ -7,12 +7,11 @@ from requests import Response
 from rest_framework.decorators import api_view
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 
+from apps.common.choices import PAYMENT_STATUS_CHOICES
 from .models import *
 from .permissions import IsAdminOrCreateOnly
 from .serializers import CategorySerializer, SocialMediaSerializer, CourseSerializer, CourseCommentSerializer, \
     SectionSerializer, LectureSerializer, LectureCommentSerializer, CertificateSerializer
-from ..choices import PAYMENT_STATUS_TYPE_CHOICES
-from ..payment.models import Payment
 
 
 class CategoryList(ListAPIView):
@@ -48,14 +47,14 @@ class CourseDetailAPIView(RetrieveAPIView):
     serializer_class = CourseSerializer
 
     def isUserEnrolled(self, request, course_id, user_id):
-        return Payment.objects.all().filter(course_id=request.data['course_id'], payer_user_id=request.data['user_id'])
+        return CourseUser.objects.all().filter(course_id=request.data['course_id'], payer=request.data['user_id'])
 
     def isUserPurchased(self, request):
-        return Payment.objects.all().filter(payment_status=PAYMENT_STATUS_TYPE_CHOICES[0][0]).filter(
+        return CourseUser.objects.all().filter(payment_status=PAYMENT_STATUS_CHOICES[0][0]).filter(
             course_id=request.data['course_id'], payer_user_id=request.data['user_id'])
 
     def getFourEnrolledUsers(self, request):
-        return Payment.objects.all().filter(payment_status=PAYMENT_STATUS_TYPE_CHOICES[0][0]).filter(
+        return CourseUser.objects.all().filter(payment_status=PAYMENT_STATUS_CHOICES[0][0]).filter(
             course_id=request.data['course_id'])[:4]
 
 
