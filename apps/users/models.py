@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.hashers import make_password
+from django.apps import apps
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -19,6 +21,36 @@ class Position(BaseModel):
         return self.name
 
 
+class CustomUserManager(UserManager):
+    def _create_user(self, phone_number, password, **extra_fields):
+        """
+        Create and save a user with the given username, email, and password.
+        """
+        if not phone_number:
+            raise ValueError("The given phone_number must be set")
+
+        user = self.model(phone_number=phone_number, **extra_fields)
+        user.password = make_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, phone_number, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(phone_number, password, **extra_fields)
+
+    def create_superuser(self, phone_number, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        return self._create_user(phone_number, password, **extra_fields)
+
+
 class User(AbstractUser):
     # general
     avatar = ImageField(upload_to="photos/avatars/%Y/%m/%d/", verbose_name=_('Avatar'))
@@ -33,7 +65,13 @@ class User(AbstractUser):
     region = models.CharField(max_length=50, verbose_name=_('Region'), blank=True, null=True)
     address = models.CharField(max_length=100, verbose_name=_('Address'), blank=True, null=True)
     postal_index = models.CharField(max_length=20, verbose_name=_('Postal Index'), blank=True, null=True)
-    phone_number = PhoneNumberField(verbose_name=_('Phone Number'))
+    phone_number = PhoneNumberField(
+        verbose_name=_('Phone Number'),
+        unique=True,
+        error_messages={
+            "unique": _("A user with that phone number already exists."),
+        }
+    )
     is_email_confirmed = models.BooleanField(default=False)
 
     # socials
@@ -45,6 +83,12 @@ class User(AbstractUser):
     work_place = models.CharField(max_length=100, verbose_name=_('Work Place'), blank=True, null=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, blank=True, null=True)
     bio = models.TextField(verbose_name=_('Biography'), null=True, blank=True)
+
+    objects = CustomUserManager()
+
+    EMAIL_FIELD = "email"
+    USERNAME_FIELD = "phone_number"
+    REQUIRED_FIELDS = []
 
     @property
     def age(self):

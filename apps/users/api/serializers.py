@@ -5,6 +5,7 @@ from apps.common.choices import PURCHASED
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = (
@@ -13,6 +14,9 @@ class UserSerializer(serializers.ModelSerializer):
             'instagram_account', 'imkon_account', 'linkedin_account',
             'work_place', 'position', 'bio'
         )
+        extra_kwargs = {
+            'birthdate': {'required': True}
+        }
 
 
 class UserCabinetSerializer(serializers.ModelSerializer):
