@@ -3,12 +3,7 @@ from django.urls import path
 from .views import CategoryList, LectureList, CategoryDetailAPIView, LectureDetailAPIView, SocialMediaList, \
     SocialMediaDetailAPIView, CourseList, CourseDetailAPIView, CourseCommentList, CourseCommentDetailAPIView, \
     SectionList, SectionDetailAPIView, LectureViewedList, LectureViewedDetailAPIView, LectureCommentList, \
-    LectureCommentDetailAPIView, CertificateList, CertificateDetailAPIView, getGeneratedCertificate
-
-
-class CertificateGeneratedList:
-    pass
-
+    LectureCommentDetailAPIView, CertificateList, CertificateDetailAPIView, CreateCertificate
 
 urlpatterns = [
     # Category urls
@@ -39,6 +34,8 @@ urlpatterns = [
     # Certificate urls
     path('certificate/list/', CertificateList.as_view(), name='Certificate-list'),
     path('certificate/<int:pk>/', CertificateDetailAPIView.as_view(), name='Certificate-detail'),
-    
-    path('certificate/<int:course_id>/<int:user_id>/', getGeneratedCertificate, name='getGeneratedCertificate'),
+
+    #path('certificate/', postGenerate_certificate, name='postGeneratedCertificate'),
+
+    path('certificate/', CreateCertificate.as_view(), name='Create-certificate'),
 ]

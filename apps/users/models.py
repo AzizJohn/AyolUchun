@@ -87,7 +87,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     EMAIL_FIELD = "email"
-    USERNAME_FIELD = "phone_number"
+    #USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = []
 
     @property
@@ -96,6 +96,9 @@ class User(AbstractUser):
             current_date = timezone.now().date()
             duration = current_date - self.birthdate
             return duration.days // 365
+
+    def __str__(self):
+        return self.get_full_name()
 
     class Meta:
         verbose_name = "User"
