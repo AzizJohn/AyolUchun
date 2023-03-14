@@ -48,35 +48,28 @@ class Course(BaseModel):
     def __str__(self):
         return self.title
 
-    def isThisCourseBoughtByUser(self, user_id):
-        return self.coursebuy_set.filter(user_id=user_id, payment=1).exists()
-
-    def getAllAssignedUsers(self):
-        return self.coursebuy_set.filter(payment=1).values_list('user_id', flat=True)
-
-    def getComments(self):
-        return self.coursecomment_set.all()
-
     class Meta:
         verbose_name = "Course"
         verbose_name_plural = "Courses"
 
 
 class CourseUser(BaseModel):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrolled_users')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrolled_courses')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='coursebuy')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_course')
 
 
 class CourseComment(BaseModel):
-    user_id = models.ForeignKey(User, verbose_name=_('User'), on_delete=models.CASCADE)
-    course_id = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, verbose_name=_('User'), on_delete=models.CASCADE,
+                                related_name='user_course_comments')
+    course_id = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE,
+                                  related_name='course_comments')
     ranking = models.DecimalField(verbose_name=_('Ranking'), max_digits=5, decimal_places=2)
     comment_text = RichTextField(verbose_name=_('comment'))
     status = models.IntegerField(
         verbose_name=_('status'))  # optional 1: yoqqani ruxsat berilgani, 2: pending: kelib tushgani  3: yoqmagani
 
     def __str__(self):
-        return self.user_id.first_name
+        return self.course_id.title
 
     class Meta:
         verbose_name = "Course Comment"
@@ -84,7 +77,7 @@ class CourseComment(BaseModel):
 
 
 class Section(BaseModel):
-    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course_id = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course_sections')
     title = models.CharField(max_length=100)
     index = models.IntegerField()
 
@@ -102,7 +95,7 @@ class Lecture(BaseModel):
     order = models.IntegerField()  # for ordering lectures 1, 2, 3, 4, 5
     video = models.FileField(upload_to="videos/lecture_video/%Y/%m/%d/")
     description = RichTextField(verbose_name=_('Description'))
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='section_lectures')
 
     def __str__(self):
         return self.title
@@ -113,16 +106,19 @@ class Lecture(BaseModel):
 
 
 class LectureViewed(BaseModel):
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='lecture_viewed')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_viewed_lecture')
+
+    def __str__(self):
+        return self.lecture.title
 
 
 class LectureComment(BaseModel):
     user = models.ForeignKey(
-        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='lecture_comments'
+        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='user_comments'
     )
     lecture = models.ForeignKey(
-        Lecture, verbose_name=_('Lecture'), on_delete=models.CASCADE
+        Lecture, verbose_name=_('Lecture'), on_delete=models.CASCADE, related_name='lecture_comments'
     )
 
     comment_text = models.TextField(verbose_name=_('Comment'))
@@ -142,9 +138,10 @@ class LectureComment(BaseModel):
 
 class Certificate(BaseModel):
     user = models.ForeignKey(
-        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='certificates'
+        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='user_certificates'
     )
-    course = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE,
+                               related_name='course_certificates')
     certificate_photo = ImageField(upload_to="photos/certificate/%Y/%m/%d/")
 
     def __str__(self):

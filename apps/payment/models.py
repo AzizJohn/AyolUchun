@@ -28,4 +28,4 @@ class Payment(BaseModel):
     )
 
     def __str__(self):
-        return f"{self.course_id.title} {self.price}"
+        return f"{self.course.title} {self.price}"
