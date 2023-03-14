@@ -7,9 +7,12 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from rest_framework.authtoken.models import Token
 
 from phonenumber_field.modelfields import PhoneNumberField
 from sorl.thumbnail import ImageField
+
+from apps.users.services.generators import random_phone_generator, random_username_generator, random_code_generator
 from apps.common.choices import GENDER_TYPE_CHOICES, AUTH_STATUS
 from apps.common.models import BaseModel
 
@@ -92,7 +95,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     EMAIL_FIELD = "email"
-    #USERNAME_FIELD = "phone_number"
+    USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = []
 
     @property
@@ -102,40 +105,50 @@ class User(AbstractUser):
             duration = current_date - self.birthdate
             return duration.days // 365
 
-    def __str__(self):
-        return self.get_full_name()
-
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
 
     def create_phone_verify_code(self):
-        code = "".join([str(random.randint(0, 100) % 10) for _ in range(6)])
+        code = random_code_generator()
         UserCodeConfirmation.objects.create(
             user_id=self.id,
             code=code
         )
         return code
 
+    def check_phone_number(self):
+        if not self.phone_number:
+            temp_phone = random_phone_generator()
+            while User.objects.filter(phone_number=temp_phone).exists():
+                temp_phone = random_phone_generator()
+            self.phone_number = temp_phone
+
     def check_username(self):
-        if self.username is None:
-            temp_username = f"DemoProject-{uuid.uuid4().__str__().split('-')[-1]}"
-            while User.objects.filter(username=temp_username):
-                temp_username = f'{temp_username}{random.randint(0, 9)}'
+        if not self.username:
+            temp_username = random_username_generator(self.first_name)
+            while User.objects.filter(username=temp_username).exists():
+                temp_username = random_username_generator(temp_username)
             self.username = temp_username
 
     def check_pass(self):
-        if self.password is None:
-            temp_password = f"password{uuid.uuid4().__str__().split('-')[-1]}"
+        if not self.password:
+            temp_password = "password12345"
             self.password = temp_password
 
     def save(self, *args, **kwargs):
+        self.check_phone_number()
         self.check_username()
         self.check_pass()
-        self.save(*args, **kwargs)
+        super().save(*args, **kwargs)
+
+    def get_token(self):
+        token, created = Token.objects.get_or_create(user=self)
+
+        return {'token': token.key}
 
     def __str__(self):
-        return str(self.phone_number)
+        return f"{str(self.id)} | {str(self.phone_number)}"
 
 
 class UserCodeConfirmation(BaseModel):
@@ -151,6 +164,10 @@ class UserCodeConfirmation(BaseModel):
             # if user is being created, set expired_at field with 3 minutes duration
             self.expired_at = timezone.now() + datetime.timedelta(minutes=3)
         super().save(*args, **kwargs)
+
+    def set_is_confirmed_true(self):
+        self.is_confirmed = True
+        self.save()
 
     def __str__(self):
         return f"{self.user} | {self.code}"

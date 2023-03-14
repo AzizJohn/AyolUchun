@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from apps.users.models import User
@@ -15,6 +16,11 @@ class SignUpSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'email', 'auth_status')
         read_only_fields = ('auth_status', )
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data.update(instance.get_token())
+        return data
+
 
 class RegisterPhoneSerializer(serializers.ModelSerializer):
 
@@ -24,11 +30,20 @@ class RegisterPhoneSerializer(serializers.ModelSerializer):
 
 
 class RegisterPasswordSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=6, write_only=True)
+    password2 = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
         fields = ('password', 'password2', )
+
+    def validate(self, data):
+
+        if data['password'] != data['password2']:
+            raise ValidationError({
+                'error': 'Two passwords must be the same!'
+            })
+
+        return data
 
 
 ###########################################################################
