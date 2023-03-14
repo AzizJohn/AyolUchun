@@ -1,13 +1,16 @@
+import datetime
+import random
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.auth.hashers import make_password
-from django.apps import apps
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from phonenumber_field.modelfields import PhoneNumberField
 from sorl.thumbnail import ImageField
-from apps.common.choices import GENDER_TYPE_CHOICES
+from apps.common.choices import GENDER_TYPE_CHOICES, AUTH_STATUS
 from apps.common.models import BaseModel
 
 
@@ -84,6 +87,8 @@ class User(AbstractUser):
     position = models.ForeignKey(Position, on_delete=models.CASCADE, blank=True, null=True)
     bio = models.TextField(verbose_name=_('Biography'), null=True, blank=True)
 
+    auth_status = models.CharField(max_length=20, choices=AUTH_STATUS, default=AUTH_STATUS[0][0])
+
     objects = CustomUserManager()
 
     EMAIL_FIELD = "email"
@@ -100,3 +105,49 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
+    def create_phone_verify_code(self):
+        code = "".join([str(random.randint(0, 100) % 10) for _ in range(6)])
+        UserCodeConfirmation.objects.create(
+            user_id=self.id,
+            code=code
+        )
+        return code
+
+    def check_username(self):
+        if self.username is None:
+            temp_username = f"DemoProject-{uuid.uuid4().__str__().split('-')[-1]}"
+            while User.objects.filter(username=temp_username):
+                temp_username = f'{temp_username}{random.randint(0, 9)}'
+            self.username = temp_username
+
+    def check_pass(self):
+        if self.password is None:
+            temp_password = f"password{uuid.uuid4().__str__().split('-')[-1]}"
+            self.password = temp_password
+
+    def save(self, *args, **kwargs):
+        self.check_username()
+        self.check_pass()
+        self.save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.phone_number)
+
+
+class UserCodeConfirmation(BaseModel):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='confirmation_codes'
+    )
+    code = models.CharField(max_length=6)
+    is_confirmed = models.BooleanField(default=False)
+    expired_at = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            # if user is being created, set expired_at field with 3 minutes duration
+            self.expired_at = timezone.now() + datetime.timedelta(minutes=3)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user} | {self.code}"

@@ -68,3 +68,18 @@ LECTURE_COMMENT_STATUS_TYPE_CHOICES = (
     (PENDING, "pending"),
     (DENIED, "denied"),
 )
+
+# USER AUTH STATUS
+NEW, PHONE_ENTERED, CODE_VERIFIED, DONE = (
+    "NEW",
+    "PHONE_ENTERED",
+    "CODE_VERIFIED",
+    "DONE"
+)
+
+AUTH_STATUS = (
+        (NEW, NEW),
+        (PHONE_ENTERED, PHONE_ENTERED),
+        (CODE_VERIFIED, CODE_VERIFIED),
+        (DONE, DONE)
+)

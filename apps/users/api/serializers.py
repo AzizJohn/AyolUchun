@@ -1,8 +1,39 @@
 from rest_framework import serializers
+from phonenumber_field.serializerfields import PhoneNumberField
 
 from apps.users.models import User
 from apps.common.choices import PURCHASED
 
+
+###########################################################################
+# ==========================   REGISTRATION   =============================
+###########################################################################
+class SignUpSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'auth_status')
+        read_only_fields = ('auth_status', )
+
+
+class RegisterPhoneSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('phone_number', )
+
+
+class RegisterPasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=6, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('password', 'password2', )
+
+
+###########################################################################
+# ==========================         =============================
+###########################################################################
 
 class UserSerializer(serializers.ModelSerializer):
 
