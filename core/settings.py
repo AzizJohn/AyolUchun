@@ -52,6 +52,7 @@ EXTRA_MODULES = [
     'ckeditor',
     'ckeditor_uploader',
     'phonenumber_field',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'modeltranslation',

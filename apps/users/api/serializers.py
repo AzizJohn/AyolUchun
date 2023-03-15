@@ -15,6 +15,10 @@ class SignUpSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'auth_status')
         read_only_fields = ('auth_status', )
+        extra_kwargs = {
+            'first_name': {'required': True},
+            'last_name': {'required': True},
+        }
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -47,7 +51,7 @@ class RegisterPasswordSerializer(serializers.ModelSerializer):
 
 
 ###########################################################################
-# ==========================         =============================
+# =======================   Cabinet Serializers   =========================
 ###########################################################################
 
 class UserSerializer(serializers.ModelSerializer):
@@ -55,13 +59,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'avatar', 'username', 'gender', 'birthdate', 'email',
+            'id', 'first_name', 'last_name', 'avatar', 'username', 'gender', 'birthdate', 'email', 'is_email_confirmed',
             'country', 'region', 'address', 'postal_index', 'phone_number',
             'instagram_account', 'imkon_account', 'linkedin_account',
             'work_place', 'position', 'bio'
         )
         extra_kwargs = {
-            'birthdate': {'required': True}
+            'birthdate': {'required': True},
+            'is_email_confirmed': {'read_only': True},
+            'first_name': {'required': True},
+            'last_name': {'required': True},
         }
 
 
@@ -79,7 +86,7 @@ class UserCabinetSerializer(serializers.ModelSerializer):
         return comments_number
 
     def get_certificates_number(self, user):
-        certificates_number = user.certificates.count()
+        certificates_number = user.course_certificates.count()
         return certificates_number
 
     class Meta:
@@ -89,3 +96,4 @@ class UserCabinetSerializer(serializers.ModelSerializer):
             'courses_number', 'comments_number', 'certificates_number',
             'work_place', 'position', 'bio',
         )
+

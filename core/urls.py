@@ -37,20 +37,18 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                  path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-                  # path('admin/', admin.site.urls),
+        path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+        # path('admin/', admin.site.urls),
 
-                  # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-                  # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+        path('course/', include("apps.course.urls")),
+        path('payment/', include("apps.payment.api.urls")),
+        path('users/', include("apps.users.api.urls")),
+        path('about/', include("apps.about.api.urls")),
+        path('blog/', include('apps.blog.api.urls')),
 
-                  path('course/', include("apps.course.urls")),
-                  # path('payment/', include("apps.payment.api.urls")),
-                  path('users/', include("apps.users.api.urls")),
-                  path('about/', include("apps.about.api.urls")),
-                  path('blog/', include('apps.blog.api.urls')),
+        path('ckeditor/', include('ckeditor_uploader.urls')),
+        path("i18n/", include("django.conf.urls.i18n")),
 
-                  path('ckeditor/', include('ckeditor_uploader.urls')),
-                  path("i18n/", include("django.conf.urls.i18n")),
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += i18n_patterns(path("admin/", admin.site.urls))

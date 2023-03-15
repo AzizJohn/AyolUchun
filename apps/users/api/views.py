@@ -1,5 +1,4 @@
 from django.utils import timezone
-from django.db.models import Q
 
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateAPIView, CreateAPIView
 from rest_framework.views import APIView
@@ -11,6 +10,7 @@ from apps.users.api.serializers import (
     UserSerializer, UserCabinetSerializer,
     SignUpSerializer, RegisterPhoneSerializer, RegisterPasswordSerializer
 )
+from apps.users.api.permissions import (IsNewUser, IsPhoneEntered, IsCodeVerified, IsAuthDone, )
 from apps.users.services.message_sender import send_confirmation_code
 from apps.common.choices import PHONE_ENTERED, CODE_VERIFIED, AUTH_DONE
 
@@ -24,6 +24,7 @@ class SignUpAPIView(CreateAPIView):
 
 
 class RegisterPhoneAPIView(APIView):
+    permission_classes = [IsNewUser]
 
     def post(self, request):
         serializer = RegisterPhoneSerializer(data=request.data)
@@ -64,7 +65,35 @@ class RegisterPhoneAPIView(APIView):
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ResendCodeAPIView(APIView):
+    permission_classes = [IsPhoneEntered]
+
+    def post(self, request):
+        user = request.user
+
+        now = timezone.now()
+        if user.confirmation_codes.filter(is_confirmed=False, expired_at__gte=now).exists():
+            # return error message, if valid code already exists in database
+            return Response(
+                data={
+                    "error": "Verification code has already been sent! Please, wait a while before requesting new code",
+                    "auth_status": user.auth_status
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # send verification code sms
+        code = user.create_phone_verify_code()
+        send_confirmation_code(user.phone_number, code)
+
+        return Response(
+            data={"message": "New verification code has been sent!", "auth_status": user.auth_status},
+            status=status.HTTP_200_OK
+        )
+
+
 class RegisterCodeVerifyAPIView(APIView):
+    permission_classes = [IsPhoneEntered]
 
     def post(self, request):
         # get necessary objects
@@ -104,6 +133,7 @@ class RegisterCodeVerifyAPIView(APIView):
 
 
 class RegisterPasswordAPIView(APIView):
+    permission_classes = [IsCodeVerified]
 
     def post(self, request):
         serializer = RegisterPasswordSerializer(data=request.data)
@@ -133,7 +163,20 @@ class UserCabinetDetailAPIView(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserCabinetSerializer
 
+    permission_classes = [IsAuthDone]
+
+    def get_object(self):
+        return self.request.user
+
 
 class UserUpdateAPIView(RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    permission_classes = [IsAuthDone]
+
+    def get_object(self):
+        return self.request.user
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)

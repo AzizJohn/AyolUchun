@@ -116,7 +116,7 @@ class LectureViewed(BaseModel):
 
 class LectureComment(BaseModel):
     user = models.ForeignKey(
-        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='user_comments'
+        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='lecture_comments'
     )
     lecture = models.ForeignKey(
         Lecture, verbose_name=_('Lecture'), on_delete=models.CASCADE, related_name='lecture_comments'
@@ -139,7 +139,7 @@ class LectureComment(BaseModel):
 
 class Certificate(BaseModel):
     user = models.ForeignKey(
-        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='user_certificates'
+        User, verbose_name=_('User'), on_delete=models.CASCADE, related_name='course_certificates'
     )
     course = models.ForeignKey(Course, verbose_name=_('Course'), on_delete=models.CASCADE,
                                related_name='course_certificates')

@@ -1,6 +1,5 @@
 import datetime
 import random
-import uuid
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
@@ -13,7 +12,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from sorl.thumbnail import ImageField
 
 from apps.users.services.generators import random_phone_generator, random_username_generator, random_code_generator
-from apps.common.choices import GENDER_TYPE_CHOICES, AUTH_STATUS
+from apps.common.choices import GENDER_TYPE_CHOICES, AUTH_STATUS, AUTH_DONE
 from apps.common.models import BaseModel
 
 
@@ -48,6 +47,7 @@ class CustomUserManager(UserManager):
     def create_superuser(self, phone_number, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("auth_status", AUTH_DONE)
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
@@ -59,7 +59,7 @@ class CustomUserManager(UserManager):
 
 class User(AbstractUser):
     # general
-    avatar = ImageField(upload_to="photos/avatars/%Y/%m/%d/", verbose_name=_('Avatar'))
+    avatar = ImageField(upload_to="photos/avatars/%Y/%m/%d/", verbose_name=_('Avatar'), null=True, blank=True)
     birthdate = models.DateField(verbose_name=_('Birthdate'), blank=True, null=True)
     gender = models.CharField(
         max_length=10, verbose_name=_('Gender'), choices=GENDER_TYPE_CHOICES,  # choices  (male and female)
@@ -100,7 +100,7 @@ class User(AbstractUser):
 
     @property
     def age(self):
-        if self.birthdate is not None:
+        if self.birthdate:
             current_date = timezone.now().date()
             duration = current_date - self.birthdate
             return duration.days // 365
@@ -126,9 +126,9 @@ class User(AbstractUser):
 
     def check_username(self):
         if not self.username:
-            temp_username = random_username_generator(self.first_name)
+            temp_username = random_username_generator()
             while User.objects.filter(username=temp_username).exists():
-                temp_username = random_username_generator(temp_username)
+                temp_username += str(random.randint(0, 9))
             self.username = temp_username
 
     def check_pass(self):
@@ -160,8 +160,8 @@ class UserCodeConfirmation(BaseModel):
     expired_at = models.DateTimeField()
 
     def save(self, *args, **kwargs):
-        if self.id is None:
-            # if user is being created, set expired_at field with 3 minutes duration
+        if not self.id:
+            # if object is being created, set expired_at field with 3 minutes duration
             self.expired_at = timezone.now() + datetime.timedelta(minutes=3)
         super().save(*args, **kwargs)
 

@@ -1,10 +1,9 @@
 import random
+import uuid
 
 
-def random_username_generator(name):
-    while len(name) < 5:
-        name += str(random.randint(0, 9))
-    name += str(random.randint(0, 9))
+def random_username_generator():
+    name = 'User-' + str(uuid.uuid4())
 
     return name
 
@@ -24,4 +23,4 @@ def random_code_generator():
 
 
 if __name__ == '__main__':
-    print(random_phone_generator())
+    print(random_username_generator())
