@@ -7,6 +7,6 @@ app_name = 'payment'
 
 urlpatterns = [
     path('list/', PaymentListAPIView.as_view(), name='payment-list'),
-    path('<int:pk>/detail', PaymentDetailAPIView.as_view(), name='payment-detail'),
+    path('<int:pk>/detail/', PaymentDetailAPIView.as_view(), name='payment-detail'),
 
 ]
