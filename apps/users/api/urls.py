@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token  # For Token Authentication
 
 from apps.users.api.views import (
     # registration
@@ -19,6 +20,7 @@ urlpatterns = [
     path('resend-code/', ResendCodeAPIView.as_view(), name='resend-code'),
     path('code-verify/', RegisterCodeVerifyAPIView.as_view(), name='code-verify'),
     path('register-password/', RegisterPasswordAPIView.as_view(), name='register-password'),
+    path('login/', obtain_auth_token, name='login'),
 
     # cabinet
     path('cabinet-detail/', UserCabinetDetailAPIView.as_view(), name='cabinet-detail'),
