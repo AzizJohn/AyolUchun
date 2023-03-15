@@ -40,11 +40,8 @@ urlpatterns = [
         path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
         # path('admin/', admin.site.urls),
 
-        # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-        # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
         path('course/', include("apps.course.urls")),
-        # path('payment/', include("apps.payment.api.urls")),
+        path('payment/', include("apps.payment.api.urls")),
         path('users/', include("apps.users.api.urls")),
         path('about/', include("apps.about.api.urls")),
         path('blog/', include('apps.blog.api.urls')),

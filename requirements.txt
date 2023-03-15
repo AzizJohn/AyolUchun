@@ -2,6 +2,7 @@ django==4.1.7
 django-ckeditor==6.5.1
 django-phonenumber-field==7.0.2
 djangorestframework==3.14.0
+django-filter==22.1
 phonenumbers==8.13.7
 pre-commit==3.1.1
 

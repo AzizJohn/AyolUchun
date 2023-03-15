@@ -1,5 +1,7 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 from apps.blog.models import PostCategory, Post, Interview
 from apps.blog.api.serializers import (
@@ -7,6 +9,7 @@ from apps.blog.api.serializers import (
     InterviewListSerializer, InterviewSerializer,
 )
 from apps.blog.services.tasks import update_post_view_task
+from apps.common.paginations import CustomPagination
 
 
 # Create your views here.
@@ -26,6 +29,11 @@ class PostCategoryDetailAPIView(RetrieveAPIView):
 class PostListAPIView(ListAPIView):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostListSerializer
+
+    pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ('category', )
+    search_fields = ('title', 'author__first_name', 'author__last_name', )
 
 
 class PostDetailAPIView(RetrieveAPIView):
@@ -49,6 +57,8 @@ class PostDetailAPIView(RetrieveAPIView):
 class InterviewListAPIView(ListAPIView):
     queryset = Interview.objects.all().order_by('-created_at')
     serializer_class = InterviewListSerializer
+
+    pagination_class = CustomPagination
 
 
 class InterviewDetailAPIView(RetrieveAPIView):
