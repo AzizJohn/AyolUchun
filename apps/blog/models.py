@@ -8,7 +8,7 @@ from apps.common.models import BaseModel, Author
 
 
 class PostCategory(BaseModel):
-    name = models.CharField(max_length=255, verbose_name=_('name'), blank=True, null=True)
+    name = models.CharField(max_length=255, verbose_name=_('name'))
 
     def __str__(self):
         return self.name
@@ -20,7 +20,7 @@ class PostCategory(BaseModel):
 
 
 class Post(BaseModel):
-    title = models.CharField(max_length=255, verbose_name='Title', blank=True, null=True)
+    title = models.CharField(max_length=255, verbose_name='Title')
     category = models.ForeignKey(
         PostCategory, on_delete=models.CASCADE, related_name='posts'
     )
@@ -69,3 +69,4 @@ class Interview(BaseModel):
     class Meta:
         verbose_name = "Interview"
         verbose_name_plural = "Interviews"
+

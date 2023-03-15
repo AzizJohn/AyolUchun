@@ -66,10 +66,6 @@ class Advertisement(BaseModel):
     content = RichTextField(verbose_name=_('Content'))
     phone_number = PhoneNumberField(verbose_name=_('Phone number'))
 
-    class Meta:
-        verbose_name = "Advertisement"
-        verbose_name_plural = "Advertisements"
-
     def __str__(self):
         return "Advertisement"
 
@@ -78,10 +74,6 @@ class UseTerm(BaseModel):
     title = models.CharField(max_length=150, null=True, blank=True)
     image = ImageField(upload_to="photos/notification_images/%Y/%m/%d/")
     content = RichTextField(verbose_name=_('Content'))
-
-    class Meta:
-        verbose_name = "Advertisement"
-        verbose_name_plural = "Advertisements"
 
     def __str__(self):
         return "UseTerm"
@@ -93,10 +85,6 @@ class Contact(BaseModel):
     address = models.CharField(max_length=150)
     long = models.FloatField()
     lat = models.FloatField()
-
-    class Meta:
-        verbose_name = "Advertisement"
-        verbose_name_plural = "Advertisements"
 
     def __str__(self):
         return "UseTerm"

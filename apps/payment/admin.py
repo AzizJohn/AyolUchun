@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
 from apps.payment.models import Payment
 
-admin.site.register(Payment)
+
+# Register your models here.
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'course', 'payer', 'price', 'payed_at')
+
+
+admin.site.register(Payment, PaymentAdmin)
