@@ -44,6 +44,7 @@ class Course(BaseModel):
                                            blank=True)
     discount_expire_date = models.DateField()  # optional
     description = RichTextField(verbose_name=_("Description"))
+    text_for_certificate  = models.TextField(verbose_name=_("Text for certificate"), blank=True, null=True)
 
     def __str__(self):
         return self.title

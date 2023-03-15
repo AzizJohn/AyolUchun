@@ -4,7 +4,7 @@ from rest_framework.serializers import ModelSerializer
 
 from ..common.serializers import AuthorSerializer
 from ..course.models import Category, Course, CourseComment, CourseUser, SocialMedia, Section, Lecture, LectureComment, \
-    Certificate
+    Certificate, LectureViewed
 from ..users.models import User
 
 
@@ -29,7 +29,7 @@ class SocialMediaSerializer(ModelSerializer):
 class CourseSerializer(ModelSerializer):
     author = AuthorSerializer(read_only=True)
     category_id = CategorySerializer(read_only=True)
-    # purchased_users=SerializerMethodField()
+    #purchased_users=SerializerMethodField()
     four_enrolled_users = SerializerMethodField()
     is_purchased = SerializerMethodField()
     average_rating = SerializerMethodField()
@@ -132,21 +132,29 @@ class LectureSerializer(ModelSerializer):
         fields = ('id', 'title', 'is_paid', 'order', 'video', 'section', 'description')
 
 
-class LectureViewed(ModelSerializer):
+class LectureViewedSerializer(ModelSerializer):
     lecture = LectureSerializer(read_only=True)
     user = CourseUserSerializer(read_only=True)
 
     class Meta:
+        model = LectureViewed
         fields = ('id', 'lecture', 'user')
 
 
 class LectureCommentSerializer(ModelSerializer):
     user_id = CourseUserSerializer(read_only=True)
     lecture = LectureSerializer(read_only=True)
+    replies = SerializerMethodField()
 
     class Meta:
         model = LectureComment
         fields = ('id', 'user_id', 'lecture', 'comment_text', 'status', 'replies', 'index')
+
+    def get_replies(self, obj):
+        if obj.replies.count() == 0:
+            return None
+        serializer = self.__class__(obj.replies.all(), many=True)
+        return serializer.data
 
 
 class CertificateSerializer(ModelSerializer):

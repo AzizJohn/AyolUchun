@@ -1,4 +1,3 @@
-from rest_framework.decorators import api_view
 from rest_framework.generics import RetrieveAPIView, ListAPIView, CreateAPIView
 from rest_framework.response import Response
 
@@ -6,13 +5,7 @@ from .certificate_generator import certificate_generate
 from .models import *
 from .permissions import IsAdminOrCreateOnly
 from .serializers import CategorySerializer, SocialMediaSerializer, CourseSerializer, CourseCommentSerializer, \
-    SectionSerializer, LectureSerializer, LectureCommentSerializer, CertificateSerializer
-from rest_framework.generics import RetrieveAPIView, ListAPIView
-
-from .models import *
-from .permissions import IsAdminOrCreateOnly
-from .serializers import CategorySerializer, SocialMediaSerializer, CourseSerializer, CourseCommentSerializer, \
-    SectionSerializer, LectureSerializer, LectureCommentSerializer, CertificateSerializer
+    SectionSerializer, LectureSerializer, LectureCommentSerializer, CertificateSerializer, LectureViewedSerializer
 
 
 class CategoryList(ListAPIView):
@@ -84,12 +77,12 @@ class LectureDetailAPIView(RetrieveAPIView):
 class LectureViewedList(ListAPIView):
     permission_classes = (IsAdminOrCreateOnly,)
     queryset = LectureViewed.objects.all()
-    serializer_class = LectureViewed
+    serializer_class = LectureViewedSerializer
 
 
 class LectureViewedDetailAPIView(RetrieveAPIView):
     queryset = LectureViewed.objects.all()
-    serializer_class = LectureViewed
+    serializer_class = LectureViewedSerializer
 
     def setLectureViewed(self):
         lecture = Lecture.objects.get(id=Lecture.id)
@@ -118,6 +111,7 @@ class CertificateDetailAPIView(RetrieveAPIView):
     queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
 
+
 # @api_view(['POST'])
 # def postGenerate_certificate(request):
 #     course = Course.objects.get(id=request.data['course'])
@@ -136,9 +130,9 @@ class CreateCertificate(CreateAPIView):
     def create(self, request, *args, **kwargs):
         course = Course.objects.get(id=request.data['course'])
         user = User.objects.get(id=request.data['user'])
-
-        file = certificate_generate('user', 'course')
-        certificate = Certificate.objects.create(course=course, user=user.first_name, certificate_photo=file)
-
+        print(course, user.first_name, user.last_name)
+        file = certificate_generate(user, course)
+        certificate = Certificate.objects.create(course=course, user=user, certificate_photo=file)
+        #
         serializer = CertificateSerializer(certificate).data
         return Response(serializer)
